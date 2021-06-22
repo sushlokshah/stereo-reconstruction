@@ -6,9 +6,10 @@ from mpl_toolkits.mplot3d import Axes3D
 import time
 import struct
 import pandas as pd
+import yaml
 
 # https://vision.middlebury.edu/stereo/data/scenes2014/ --datasets
-#https://answers.opencv.org/question/228119/disparity-map-to-point-cloud-gone-wrong/
+# https://zetcode.com/python/yaml/
 """
 SCENE-{perfect,imperfect}/     -- each scene comes with perfect and imperfect calibration (see paper)
   ambient/                     -- directory of all input views under ambient lighting
@@ -23,48 +24,6 @@ SCENE-{perfect,imperfect}/     -- each scene comes with perfect and imperfect ca
   disp{0,1}-n.png              -- left and right GT number of samples (* perfect only)
   disp{0,1}-sd.pfm             -- left and right GT sample standard deviations (* perfect only)
   disp{0,1}y.pfm               -- left and right GT y-disparities (* imperfect only)
-"""
-#calibration information
-"""
-cam0=[3979.911 0 1244.772; 0 3979.911 1019.507; 0 0 1]
-cam1=[3979.911 0 1369.115; 0 3979.911 1019.507; 0 0 1]
-doffs=124.343
-baseline=193.001
-width=2964
-height=2000
-ndisp=270
-isint=0
-vmin=23
-vmax=245
-dyavg=0
-dymax=0
-
-cam0=[5806.559 0 1429.219; 0 5806.559 993.403; 0 0 1]
-cam1=[5806.559 0 1543.51; 0 5806.559 993.403; 0 0 1]
-doffs=114.291
-baseline=174.019
-width=2960
-height=2016
-ndisp=250
-isint=0
-vmin=38
-vmax=222
-dyavg=0
-dymax=0
-
-cam0=[5299.313 0 1263.818; 0 5299.313 977.763; 0 0 1]
-cam1=[5299.313 0 1438.004; 0 5299.313 977.763; 0 0 1]
-doffs=174.186
-baseline=177.288
-width=2988
-height=2008
-ndisp=180
-isint=0
-vmin=54
-vmax=147
-dyavg=0
-dymax=0
-
 """
 def write_pointcloud(filename,xyz_points,rgb_points=None):
 
@@ -95,8 +54,8 @@ def write_pointcloud(filename,xyz_points,rgb_points=None):
       if(i%5000 == 0):
         print(i)
       fid.write(bytearray(struct.pack("fffccc",xyz_points[i,0],xyz_points[i,1],xyz_points[i,2],
-                                        rgb_points[i,0].tobytes(),rgb_points[i,1].tobytes(),
-                                        rgb_points[i,2].tobytes())))
+                                        rgb_points[i,2].tobytes(),rgb_points[i,1].tobytes(),
+                                        rgb_points[i,1].tobytes())))
     fid.close()
 
 def config_info(path):
@@ -143,7 +102,7 @@ def config_info(path):
 
 def find_disparity(image1,image2,path):
     Dic,k,Q,max_disparity,min_disparity,num_disparities,window_size = config_info(path)
-    stereo = cv.StereoSGBM_create(minDisparity = min_disparity, numDisparities = num_disparities, blockSize = 5, uniquenessRatio = 2, speckleWindowSize = 5, speckleRange = 5, disp12MaxDiff = 10, P1 = 8*3*window_size**2, P2 = 32*3*window_size**2)
+    stereo = cv.StereoSGBM_create(minDisparity = min_disparity, numDisparities = num_disparities, blockSize = 5, uniquenessRatio = 10, speckleWindowSize = 5, speckleRange = 5, disp12MaxDiff = 0, P1 = 8*3*window_size**2, P2 = 32*3*window_size**2)
     imgL = cv.imread(image1,0)
     print(imgL.shape)
     imgR = cv.imread(image2,0)
@@ -152,7 +111,7 @@ def find_disparity(image1,image2,path):
     plt.imshow(disparity,"jet")
     #plt.pause(0.1)
     plt.show()
-    cv.imwrite("disparity.jpg",disparity)
+    #cv.imwrite("disparity.jpg",disparity)
     return disparity,Q
 
 def disparity_to_pointcloud(disparity,Q,image1):
@@ -176,6 +135,10 @@ def disparity_to_pointcloud(disparity,Q,image1):
   return point3d,color
 
 if __name__ == "__main__":
-    disparity,Q = find_disparity("imc0.png","imc1.png","calibration_info.txt")
-    point_cloud,color = disparity_to_pointcloud(disparity,Q,"imc0.png")
-    write_pointcloud("C:\\Users\\sushl\\Desktop\\VO\\stereo-reconstruction\\stereo4.ply",point_cloud,color)
+  with open('path.yaml') as f:
+    data = yaml.load(f, Loader=yaml.FullLoader)
+  
+  disparity,Q = find_disparity(data["image_1_path"],data["image_2_path"],data["calibration_info_path"])
+  point_cloud,color = disparity_to_pointcloud(disparity,Q,data["image_1_path"])
+  write_pointcloud(data["output_path"] +"\\output.ply",point_cloud,color)
+  
