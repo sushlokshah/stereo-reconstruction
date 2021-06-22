@@ -18,7 +18,7 @@ The Aim is to reconstruct a 3D structure, given the pair of stereo images.
       #Result is obtained in output.ply at folder specified, which can be viewed using MeshLab, Open3D, or any other related software or library to view point clouds.
 ```
 # Result
-|Stereo Image 1| Stereo Image 2 | Disparity  | 3d reconstruction |
+|Stereo Image 1| Stereo Image 2 | Disparity Map  | 3d reconstruction |
 | -------- | -------- | --- | -------- |
 | <img src="https://github.com/sushlokshah/stereo-reconstruction/blob/main/bike/im0.png" width="250" height="250" />   | <img src="https://github.com/sushlokshah/stereo-reconstruction/blob/main/bike/im1.png" width="250" height="250" />      |<img src="https://github.com/sushlokshah/stereo-reconstruction/blob/main/bike/Screenshot%202021-06-22%20090220.png" width="250" height="250" />  | <img src="https://github.com/sushlokshah/stereo-reconstruction/blob/main/bike/output.png" width="250" height="250" />       |
 | <img src="https://github.com/sushlokshah/stereo-reconstruction/blob/main/cycle/imb0.png" width="250" height="250" />   | <img src="https://github.com/sushlokshah/stereo-reconstruction/blob/main/cycle/imb1.png" width="250" height="250" />      |<img src="https://github.com/sushlokshah/stereo-reconstruction/blob/main/cycle/Screenshot%202021-06-22%20090548.png" width="250" height="250" />  | <img src="https://github.com/sushlokshah/stereo-reconstruction/blob/main/cycle/output.png" width="250" height="250" />       |
