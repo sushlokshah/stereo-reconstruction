@@ -7,6 +7,7 @@ import time
 import struct
 import pandas as pd
 import yaml
+from scipy import ndimage, misc
 
 # https://vision.middlebury.edu/stereo/data/scenes2014/ --datasets
 # https://zetcode.com/python/yaml/
@@ -102,12 +103,14 @@ def config_info(path):
 
 def find_disparity(image1,image2,path):
     Dic,k,Q,max_disparity,min_disparity,num_disparities,window_size = config_info(path)
-    stereo = cv.StereoSGBM_create(minDisparity = min_disparity, numDisparities = num_disparities, blockSize = 5, uniquenessRatio = 10, speckleWindowSize = 5, speckleRange = 5, disp12MaxDiff = 0, P1 = 8*3*window_size**2, P2 = 32*3*window_size**2)
+    stereo = cv.StereoSGBM_create(minDisparity = min_disparity, numDisparities = num_disparities,preFilterCap = 1, blockSize = 5, uniquenessRatio = 2, speckleWindowSize = 50, speckleRange = 2, disp12MaxDiff = 1, P1 = 8*3*window_size**2, P2 = 32*3*window_size**2,mode = 4)
     imgL = cv.imread(image1,0)
     print(imgL.shape)
     imgR = cv.imread(image2,0)
     print(imgR.shape)
     disparity = stereo.compute(imgL,imgR).astype(np.float32)
+    disparity = ndimage.median_filter(disparity, size=21)
+    #disparity = cv.bilateralFilter(disparity,9,75,75)
     plt.imshow(disparity,"jet")
     #plt.pause(0.1)
     plt.show()

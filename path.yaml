@@ -1,4 +1,4 @@
-image_1_path: C:\\Users\\sushl\\Desktop\\VO\\stereo-reconstruction\\umbrella\\ima0.png
-image_2_path: C:\\Users\\sushl\\Desktop\\VO\\stereo-reconstruction\\umbrella\\ima1.png
-calibration_info_path: C:\\Users\\sushl\\Desktop\\VO\\stereo-reconstruction\\umbrella\\calibration_info.txt
-output_path: C:\\Users\\sushl\\Desktop\\VO\\stereo-reconstruction\\umbrella\\
+image_1_path: C:\\Users\\sushl\\Desktop\\VO\\stereo-reconstruction\\bike\\im0.png
+image_2_path: C:\\Users\\sushl\\Desktop\\VO\\stereo-reconstruction\\bike\\im1.png
+calibration_info_path: C:\\Users\\sushl\\Desktop\\VO\\stereo-reconstruction\\bike\\calibration_info.txt
+output_path: C:\\Users\\sushl\\Desktop\\VO\\stereo-reconstruction\\bike\\
